@@ -50,7 +50,7 @@ public class OpenAIServiceImpl implements OpenAIService {
         Message userMessage = new PromptTemplate(question.question()).createMessage();
         Message systemMessage = new SystemPromptTemplate("You are an agent which returns back a stock price for the given stock symbol (or ticker)").createMessage();
 
-        var response = openAiChatClient.call(new Prompt(List.of(userMessage, systemMessage), promptOptions));
+        var response = openAiChatModel.call(new Prompt(List.of(userMessage, systemMessage), promptOptions));
 
         return new Answer(response.getResult().getOutput().getContent());
     }
