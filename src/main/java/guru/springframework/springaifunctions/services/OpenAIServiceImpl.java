@@ -11,7 +11,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.model.ModelOptionsUtils;
-import org.springframework.ai.model.function.FunctionCallbackWrapper;
+import org.springframework.ai.model.function.FunctionCallback;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,10 +34,10 @@ public class OpenAIServiceImpl implements OpenAIService {
     @Override
     public Answer getAnswer(Question question) {
         var promptOptions = OpenAiChatOptions.builder()
-                .withFunctionCallbacks(List.of(FunctionCallbackWrapper.builder(new WeatherServiceFunction(apiNinjasKey))
-                        .withName("CurrentWeather")
-                                .withDescription("Get the current weather for a location")
-                                .withResponseConverter((response) -> {
+                .functionCallbacks(List.of(FunctionCallback.builder()
+                                .function("CurrentWeather", new WeatherServiceFunction(apiNinjasKey))
+                                .description("Get the current weather for a location")
+                                .responseConverter(response -> {
                                     String schema = ModelOptionsUtils.getJsonSchema(WeatherResponse.class, false);
                                     String json = ModelOptionsUtils.toJsonString(response);
                                     return schema + "\n" + json;
