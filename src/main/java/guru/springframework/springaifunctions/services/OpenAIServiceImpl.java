@@ -36,7 +36,7 @@ public class OpenAIServiceImpl implements OpenAIService {
                 .functionCallbacks(List.of(FunctionCallback.builder()
                                 .function("CurrentWeather", new WeatherServiceFunction(apiNinjasKey))
                                 .description("Get the current weather for a location")
-                                .withResponseConverter((response) -> {
+                                .responseConverter(response -> {
                                     String schema = ModelOptionsUtils.getJsonSchema(WeatherResponse.class, false);
                                     String json = ModelOptionsUtils.toJsonString(response);
                                     return schema + "\n" + json;
