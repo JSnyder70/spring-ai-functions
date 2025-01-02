@@ -36,10 +36,10 @@ public class OpenAIServiceImpl implements OpenAIService {
     @Override
     public Answer getStockPrice(Question question) {
         var promptOptions = OpenAiChatOptions.builder()
-                .withFunctionCallbacks(List.of(FunctionCallbackWrapper.builder(new StockQuoteFunction(apiNinjasKey))
-                        .withName("CurrentStockPrice")
-                        .withDescription("Get the current stock price for a stock symbol")
-                        .withResponseConverter((response) -> {
+                .functionCallbacks(List.of(FunctionCallback.builder()
+                                .function("CurrentStockPrice", new StockQuoteFunction(apiNinjasKey))
+                        .description("Get the current stock price for a stock symbol")
+                        .responseConverter((response) -> {
                             String schema = ModelOptionsUtils.getJsonSchema(StockPriceResponse.class, false);
                             String json = ModelOptionsUtils.toJsonString(response);
                             return schema + "\n" + json;
