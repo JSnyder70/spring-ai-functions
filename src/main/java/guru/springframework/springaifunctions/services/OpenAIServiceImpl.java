@@ -4,6 +4,7 @@ package guru.springframework.springaifunctions.services;
 import guru.springframework.springaifunctions.functions.WeatherServiceFunction;
 import guru.springframework.springaifunctions.model.Answer;
 import guru.springframework.springaifunctions.model.Question;
+import guru.springframework.springaifunctions.model.WeatherRequest;
 import guru.springframework.springaifunctions.model.WeatherResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.messages.Message;
@@ -42,8 +43,10 @@ public class OpenAIServiceImpl implements OpenAIService {
                                     String json = ModelOptionsUtils.toJsonString(response);
                                     return schema + "\n" + json;
                                 })
-                      .build()))
-                .build();
+                                .inputType(WeatherRequest.class)
+                                .build()
+                        )
+                ).build();
 
         Message userMessage = new PromptTemplate(question.question()).createMessage();
 
